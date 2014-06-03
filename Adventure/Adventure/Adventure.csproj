@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseCommand.cs" />
+    <Compile Include="WhistleCommand.cs" />
     <Compile Include="DanceCommand.cs" />
     <Compile Include="GameEngine.cs" />
     <Compile Include="HideCommand.cs" />
