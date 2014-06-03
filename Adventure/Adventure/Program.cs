@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Castle.MicroKernel.Registration;
+using Castle.MicroKernel.Resolvers.SpecializedResolvers;
+using Castle.Windsor;
 
 namespace Adventure
 {
@@ -10,21 +13,22 @@ namespace Adventure
     {
         static void Main(string[] args)
         {
-            string input = "";
-            do
-            {
-                if (input.ToLower().Trim() == "dance")
-                    Console.WriteLine("You dance around like a fool");
-                
-                if (input.ToLower().Trim() == "pass")
-                    Console.WriteLine("Good Pass!");
-               
-                if (input.ToLower().Trim() == "shoot")
-                    Console.WriteLine("Off the mark. Try again? Choose yes or no");
-                Console.Write("> ");
-                input = Console.ReadLine();
-            }
-            while (input.ToLower().Trim() != "exit");
+            // Open Package Manager Console (View -> Other Windows -> Package Manager Console)
+            //   Install-Package Castle.Windsor
+
+            var windsor = new WindsorContainer();
+            windsor.Kernel.Resolver.AddSubResolver(new ArrayResolver(windsor.Kernel));
+            windsor.Register(
+                Classes.FromThisAssembly().Pick().WithServiceDefaultInterfaces()
+            );
+
+            var engine = windsor.Resolve<IGameEngine>();
+            engine.Start();
+        }
+
+        public static bool IsSuccessful()
+        {
+            return (DateTime.Now.Ticks % 2) == 0;
         }
     }
 }
